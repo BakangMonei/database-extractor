@@ -99,6 +99,8 @@ REACT_APP_API_URL=http://localhost:3001
 5. **Configure Settings**: Set batch size, upsert options, dry run mode
 6. **Run Migration**: Monitor progress in real-time
 
+> 📘 **New to testing database connections?** See the comprehensive [Testing Guide](docs/TESTING_GUIDE.md) for detailed, step-by-step instructions for each database type.
+
 ## MVP: Firestore → PostgreSQL
 
 The current MVP supports end-to-end migration from Firebase Firestore to PostgreSQL:
@@ -252,11 +254,16 @@ See [GitHub Issues](https://github.com/yourusername/db-migrate/issues) for detai
 
 Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
 
+## Documentation
+
+- 📖 [Full Documentation](docs/)
+- 🧪 [Testing Guide](docs/TESTING_GUIDE.md) - Detailed instructions for testing each database connector
+- 🔌 [Connector Guide](docs/connector-guide.md) - How to add new database connectors
+
 ## Support
 
-- 📖 [Documentation](docs/)
-- 🐛 [Issue Tracker](https://github.com/yourusername/db-migrate/issues)
-- 💬 [Discussions](https://github.com/yourusername/db-migrate/discussions)
+- 🐛 [Issue Tracker](https://github.com/BakangMonei/database-extractor/issues)
+- 💬 [Discussions](https://github.com/BakangMonei/database-extractor/discussions)
 
 ## Acknowledgments
 
