@@ -41,16 +41,18 @@ export default function StepConnection() {
       } catch (e) {
         // Invalid JSON, keep as string or handle error
         console.error('Invalid serviceAccount JSON', e);
+        toast.error('Invalid JSON in service account field');
+        return;
       }
     }
 
-    dispatch(setSourceConfig(config));
-
-    // Test connection - dispatch always returns the action, check the type
+    // Test connection first
     const result = await dispatch(testConnection({ config, type: 'source' }));
     // If fulfilled, check if successful
     if (testConnection.fulfilled.match(result)) {
       if (result.payload?.result?.success) {
+        // Save config only if connection is successful
+        dispatch(setSourceConfig(config));
         toast.success(result.payload.result.message || 'Connection successful!');
       } else {
         toast.error(result.payload?.result?.message || 'Connection failed');
@@ -62,13 +64,14 @@ export default function StepConnection() {
 
   const onSubmitDest = async data => {
     const config = { type: destination, ...data };
-    dispatch(setDestinationConfig(config));
 
-    // Test connection - dispatch always returns the action, check the type
+    // Test connection first
     const result = await dispatch(testConnection({ config, type: 'destination' }));
     // If fulfilled, check if successful
     if (testConnection.fulfilled.match(result)) {
       if (result.payload?.result?.success) {
+        // Save config only if connection is successful
+        dispatch(setDestinationConfig(config));
         toast.success(result.payload.result.message || 'Connection successful!');
       } else {
         toast.error(result.payload?.result?.message || 'Connection failed');
@@ -117,9 +120,16 @@ export default function StepConnection() {
   };
 
   const handleNext = () => {
-    if (sourceConfig && destinationConfig) {
-      dispatch(setStep(4));
+    if (!sourceConfig) {
+      toast.error('Please test the source connection first');
+      return;
     }
+    if (!destinationConfig) {
+      toast.error('Please test the destination connection first');
+      return;
+    }
+    // Both configs exist, proceed to discover step
+    dispatch(setStep(4));
   };
 
   const renderSourceForm = () => {
@@ -619,8 +629,7 @@ export default function StepConnection() {
         </button>
         <button
           onClick={handleNext}
-          disabled={!sourceConfig || !destinationConfig}
-          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           Next: Discover Data →
         </button>

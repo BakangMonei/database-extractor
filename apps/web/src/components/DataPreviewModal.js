@@ -9,7 +9,7 @@ export default function DataPreviewModal({ isOpen, onClose, title, data, schema 
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+      <div className="flex min-h-screen items-center justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
         {/* Background overlay */}
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -80,7 +80,10 @@ export default function DataPreviewModal({ isOpen, onClose, title, data, schema 
                       {data.slice(0, 10).map((row, idx) => (
                         <tr key={idx}>
                           {Object.entries(row).map(([key, value]) => (
-                            <td key={key} className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                            <td
+                              key={key}
+                              className="whitespace-nowrap px-4 py-3 text-sm text-gray-900"
+                            >
                               {typeof value === 'object' && value !== null
                                 ? JSON.stringify(value).substring(0, 50) + '...'
                                 : String(value).substring(0, 100)}

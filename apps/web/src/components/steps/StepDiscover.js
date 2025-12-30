@@ -114,7 +114,9 @@ export default function StepDiscover() {
                   >
                     <div className="font-medium text-gray-900">{collection.name}</div>
                     {collection.documentCount !== undefined && (
-                      <div className="text-sm text-gray-500">{collection.documentCount} documents</div>
+                      <div className="text-sm text-gray-500">
+                        {collection.documentCount} documents
+                      </div>
                     )}
                   </button>
                   <button
