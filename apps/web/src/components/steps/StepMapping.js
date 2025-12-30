@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setStep, setMapping, inspectSchema } from '../../store/slices/migrationSlice';
+import { setStep, setMapping } from '../../store/slices/migrationSlice';
 import * as api from '../../services/api';
 
 export default function StepMapping() {
@@ -9,10 +9,8 @@ export default function StepMapping() {
   const destinationConfig = useSelector(state => state.migration.destinationConfig);
   const selectedSourceCollection = useSelector(state => state.migration.selectedSourceCollection);
   const selectedDestinationTable = useSelector(state => state.migration.selectedDestinationTable);
-  const mapping = useSelector(state => state.migration.mapping);
 
   const [sourceSchema, setSourceSchema] = useState(null);
-  const [destinationSchema, setDestinationSchema] = useState(null);
   const [fieldMappings, setFieldMappings] = useState([]);
 
   useEffect(() => {
@@ -33,10 +31,9 @@ export default function StepMapping() {
       });
     }
 
+    // Destination schema can be used for validation in the future
     if (selectedDestinationTable && destinationConfig) {
-      api.inspectSchema(destinationConfig, selectedDestinationTable).then(result => {
-        setDestinationSchema(result.schema);
-      });
+      api.inspectSchema(destinationConfig, selectedDestinationTable);
     }
   }, [selectedSourceCollection, selectedDestinationTable, sourceConfig, destinationConfig]);
 

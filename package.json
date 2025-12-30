@@ -42,5 +42,8 @@
     "postgresql",
     "mongodb",
     "data-migration"
-  ]
+  ],
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2"
+  }
 }
