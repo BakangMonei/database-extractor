@@ -54,7 +54,7 @@ db-migrate/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/db-migrate.git
+git clone https://github.com/BakangMonei/database-extractor
 cd db-migrate
 
 # Install dependencies
