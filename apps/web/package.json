@@ -18,7 +18,8 @@
     "@reduxjs/toolkit": "^2.2.0",
     "web-vitals": "^2.1.4",
     "zod": "^3.22.4",
-    "@hookform/resolvers": "^3.3.4"
+    "@hookform/resolvers": "^3.3.4",
+    "react-hot-toast": "^2.5.2"
   },
   "scripts": {
     "start": "react-scripts start",

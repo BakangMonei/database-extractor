@@ -12,6 +12,7 @@ import { connectRouter } from './routes/connect.js';
 import { discoverRouter } from './routes/discover.js';
 import { schemaRouter } from './routes/schema.js';
 import { mappingRouter } from './routes/mapping.js';
+import { previewRouter } from './routes/preview.js';
 
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
@@ -44,6 +45,7 @@ app.use('/api/connect', connectRouter);
 app.use('/api/discover', discoverRouter);
 app.use('/api/schema', schemaRouter);
 app.use('/api/mapping', mappingRouter);
+app.use('/api/preview', previewRouter);
 app.use('/api/migrate', migrateRouter);
 
 // Error handler

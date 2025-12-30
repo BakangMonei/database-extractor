@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 import {
   setStep,
   discoverCollections,
   setSelectedSourceCollection,
   setSelectedDestinationTable,
 } from '../../store/slices/migrationSlice';
+import * as api from '../../services/api';
+import DataPreviewModal from '../DataPreviewModal';
 
 export default function StepDiscover() {
   const dispatch = useDispatch();
@@ -17,13 +20,34 @@ export default function StepDiscover() {
   const selectedDestinationTable = useSelector(state => state.migration.selectedDestinationTable);
   const loading = useSelector(state => state.migration.loading);
 
+  const [previewModal, setPreviewModal] = useState({
+    isOpen: false,
+    title: '',
+    data: null,
+    schema: null,
+  });
+
   useEffect(() => {
     // Auto-discover on mount
     if (sourceConfig && sourceCollections.length === 0) {
-      dispatch(discoverCollections(sourceConfig));
+      dispatch(discoverCollections(sourceConfig)).then(result => {
+        if (discoverCollections.fulfilled.match(result)) {
+          const count = result.payload.collections?.length || 0;
+          if (count > 0) {
+            toast.success(`Found ${count} collection(s)`);
+          }
+        }
+      });
     }
     if (destinationConfig && destinationTables.length === 0) {
-      dispatch(discoverCollections(destinationConfig));
+      dispatch(discoverCollections(destinationConfig)).then(result => {
+        if (discoverCollections.fulfilled.match(result)) {
+          const count = result.payload.collections?.length || 0;
+          if (count > 0) {
+            toast.success(`Found ${count} table(s)`);
+          }
+        }
+      });
     }
   }, [
     dispatch,
@@ -32,6 +56,27 @@ export default function StepDiscover() {
     sourceCollections.length,
     destinationTables.length,
   ]);
+
+  const handlePreviewCollection = async (collectionName, isSource = true) => {
+    try {
+      toast.loading('Loading preview data...', { id: 'preview' });
+      const config = isSource ? sourceConfig : destinationConfig;
+      const [dataResult, schemaResult] = await Promise.all([
+        api.previewData(config, collectionName, 10),
+        api.inspectSchema(config, collectionName).catch(() => null),
+      ]);
+
+      setPreviewModal({
+        isOpen: true,
+        title: `${isSource ? 'Collection' : 'Table'}: ${collectionName}`,
+        data: dataResult.data || [],
+        schema: schemaResult?.schema || null,
+      });
+      toast.success('Preview loaded', { id: 'preview' });
+    } catch (error) {
+      toast.error('Failed to load preview', { id: 'preview' });
+    }
+  };
 
   const handleNext = () => {
     if (selectedSourceCollection && selectedDestinationTable) {
@@ -54,20 +99,32 @@ export default function StepDiscover() {
           )}
           <div className="space-y-2">
             {sourceCollections.map(collection => (
-              <button
+              <div
                 key={collection.name}
-                onClick={() => dispatch(setSelectedSourceCollection(collection.name))}
-                className={`w-full rounded-lg border-2 px-4 py-3 text-left transition-all ${
+                className={`w-full rounded-lg border-2 transition-all ${
                   selectedSourceCollection === collection.name
                     ? 'border-indigo-600 bg-indigo-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <div className="font-medium text-gray-900">{collection.name}</div>
-                {collection.documentCount !== undefined && (
-                  <div className="text-sm text-gray-500">{collection.documentCount} documents</div>
-                )}
-              </button>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <button
+                    onClick={() => dispatch(setSelectedSourceCollection(collection.name))}
+                    className="flex-1 text-left"
+                  >
+                    <div className="font-medium text-gray-900">{collection.name}</div>
+                    {collection.documentCount !== undefined && (
+                      <div className="text-sm text-gray-500">{collection.documentCount} documents</div>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => handlePreviewCollection(collection.name, true)}
+                    className="ml-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Preview
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -155,6 +212,14 @@ export default function StepDiscover() {
           </div>
         </div>
       </div>
+
+      <DataPreviewModal
+        isOpen={previewModal.isOpen}
+        onClose={() => setPreviewModal({ ...previewModal, isOpen: false })}
+        title={previewModal.title}
+        data={previewModal.data}
+        schema={previewModal.schema}
+      />
 
       <div className="mt-6 flex justify-between">
         <button

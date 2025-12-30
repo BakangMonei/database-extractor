@@ -1,12 +1,15 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import {
   setSourceConfig,
   setDestinationConfig,
   setStep,
   testConnection,
+  discoverCollections,
 } from '../../store/slices/migrationSlice';
+import * as api from '../../services/api';
 
 export default function StepConnection() {
   const dispatch = useDispatch();
@@ -48,11 +51,13 @@ export default function StepConnection() {
     // If fulfilled, check if successful
     if (testConnection.fulfilled.match(result)) {
       if (result.payload?.result?.success) {
-        // Connection successful
-        console.log('Connection test successful');
+        toast.success(result.payload.result.message || 'Connection successful!');
+      } else {
+        toast.error(result.payload?.result?.message || 'Connection failed');
       }
+    } else if (testConnection.rejected.match(result)) {
+      toast.error('Connection test failed');
     }
-    // If rejected, error is handled by Redux state (error will be set)
   };
 
   const onSubmitDest = async data => {
@@ -64,11 +69,51 @@ export default function StepConnection() {
     // If fulfilled, check if successful
     if (testConnection.fulfilled.match(result)) {
       if (result.payload?.result?.success) {
-        // Connection successful
-        console.log('Connection test successful');
+        toast.success(result.payload.result.message || 'Connection successful!');
+      } else {
+        toast.error(result.payload?.result?.message || 'Connection failed');
       }
+    } else if (testConnection.rejected.match(result)) {
+      toast.error('Connection test failed');
     }
-    // If rejected, error is handled by Redux state (error will be set)
+  };
+
+  const handleDiscoverSource = async () => {
+    if (!sourceConfig) {
+      toast.error('Please test connection first');
+      return;
+    }
+    try {
+      toast.loading('Discovering collections...', { id: 'discover-source' });
+      const result = await dispatch(discoverCollections(sourceConfig));
+      if (discoverCollections.fulfilled.match(result)) {
+        const count = result.payload.collections?.length || 0;
+        toast.success(`Found ${count} collection(s)`, { id: 'discover-source' });
+      } else {
+        toast.error('Failed to discover collections', { id: 'discover-source' });
+      }
+    } catch (error) {
+      toast.error('Failed to discover collections', { id: 'discover-source' });
+    }
+  };
+
+  const handleDiscoverDestination = async () => {
+    if (!destinationConfig) {
+      toast.error('Please test connection first');
+      return;
+    }
+    try {
+      toast.loading('Discovering tables...', { id: 'discover-dest' });
+      const result = await dispatch(discoverCollections(destinationConfig));
+      if (discoverCollections.fulfilled.match(result)) {
+        const count = result.payload.collections?.length || 0;
+        toast.success(`Found ${count} table(s)`, { id: 'discover-dest' });
+      } else {
+        toast.error('Failed to discover tables', { id: 'discover-dest' });
+      }
+    } catch (error) {
+      toast.error('Failed to discover tables', { id: 'discover-dest' });
+    }
   };
 
   const handleNext = () => {
@@ -202,13 +247,24 @@ export default function StepConnection() {
               <span className="ml-2 text-sm text-gray-700">Use SSL</span>
             </label>
           </div>
-          <button
-            type="submit"
-            disabled={connectionTesting.source}
-            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
-          >
-            {connectionTesting.source ? 'Testing...' : 'Test Connection'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={connectionTesting.source}
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+            >
+              {connectionTesting.source ? 'Testing...' : 'Test Connection'}
+            </button>
+            {connectionStatus.source?.success && (
+              <button
+                type="button"
+                onClick={handleDiscoverSource}
+                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Discover Collections
+              </button>
+            )}
+          </div>
           {connectionStatus.source && (
             <div
               className={`rounded-md p-3 ${
@@ -405,6 +461,24 @@ export default function StepConnection() {
               <span className="ml-2 text-sm text-gray-700">Use SSL (required for Supabase)</span>
             </label>
           </div>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={connectionTesting.destination}
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+            >
+              {connectionTesting.destination ? 'Testing...' : 'Test Connection'}
+            </button>
+            {connectionStatus.destination?.success && (
+              <button
+                type="button"
+                onClick={handleDiscoverDestination}
+                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Discover Tables
+              </button>
+            )}
+          </div>
           {connectionStatus.destination && (
             <div
               className={`rounded-md p-3 ${
@@ -416,13 +490,6 @@ export default function StepConnection() {
               <p className="text-sm font-medium">{connectionStatus.destination.message}</p>
             </div>
           )}
-          <button
-            type="submit"
-            disabled={connectionTesting.destination}
-            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
-          >
-            {connectionTesting.destination ? 'Testing...' : 'Test Connection'}
-          </button>
         </form>
       );
     }
@@ -486,13 +553,24 @@ export default function StepConnection() {
               <span className="ml-2 text-sm text-gray-700">Use SSL</span>
             </label>
           </div>
-          <button
-            type="submit"
-            disabled={connectionTesting.destination}
-            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
-          >
-            {connectionTesting.destination ? 'Testing...' : 'Test Connection'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={connectionTesting.destination}
+              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+            >
+              {connectionTesting.destination ? 'Testing...' : 'Test Connection'}
+            </button>
+            {connectionStatus.destination?.success && (
+              <button
+                type="button"
+                onClick={handleDiscoverDestination}
+                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Discover Tables
+              </button>
+            )}
+          </div>
           {connectionStatus.destination && (
             <div
               className={`rounded-md p-3 ${

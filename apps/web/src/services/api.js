@@ -73,3 +73,11 @@ export const getMigrationErrors = async jobId => {
   const response = await api.get(`/api/migrate/errors/${jobId}`);
   return response.data;
 };
+
+/**
+ * Preview data from a collection/table
+ */
+export const previewData = async (config, name, limit = 10) => {
+  const response = await api.post('/api/preview', { config, name, limit });
+  return response.data;
+};
