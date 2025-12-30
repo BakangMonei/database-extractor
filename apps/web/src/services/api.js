@@ -13,8 +13,17 @@ const api = axios.create({
  * Test database connection
  */
 export const testConnection = async config => {
-  const response = await api.post('/api/connect/test', { config });
-  return response.data;
+  try {
+    const response = await api.post('/api/connect/test', { config });
+    return response.data;
+  } catch (error) {
+    // If the API returns an error response with data, extract it
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    // Otherwise throw the error as-is
+    throw error;
+  }
 };
 
 /**

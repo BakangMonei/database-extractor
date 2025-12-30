@@ -4,9 +4,21 @@ import * as api from '../../services/api';
 // Async thunks
 export const testConnection = createAsyncThunk(
   'migration/testConnection',
-  async ({ config, type }) => {
-    const response = await api.testConnection(config);
-    return { type, result: response };
+  async ({ config, type }, { rejectWithValue }) => {
+    try {
+      const response = await api.testConnection(config);
+      return { type, result: response };
+    } catch (error) {
+      // If error has a response structure (from API), use it
+      if (error.success !== undefined) {
+        return rejectWithValue({ type, result: error });
+      }
+      // Otherwise use the error message
+      return rejectWithValue({
+        type,
+        result: { success: false, message: error.message || 'Connection test failed' },
+      });
+    }
   }
 );
 
@@ -130,7 +142,9 @@ const migrationSlice = createSlice({
       .addCase(testConnection.rejected, (state, action) => {
         const type = action.meta.arg.type;
         state.connectionTesting[type] = false;
-        state.error = action.error.message;
+        // Use the payload if available (from rejectWithValue), otherwise use error message
+        const errorMessage = action.payload?.result?.message || action.error?.message || 'Connection test failed';
+        state.error = errorMessage;
       })
       // Discover collections
       .addCase(discoverCollections.pending, state => {

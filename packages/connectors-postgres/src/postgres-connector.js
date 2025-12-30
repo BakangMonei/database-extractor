@@ -166,7 +166,7 @@ export class PostgreSQLConnector extends Connector {
       serial: 'integer',
       bigserial: 'integer',
       real: 'float',
-      double precision: 'float',
+      'double precision': 'float',
       numeric: 'number',
       decimal: 'number',
       boolean: 'boolean',

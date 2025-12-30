@@ -42,22 +42,32 @@ export default function StepConnection() {
 
     dispatch(setSourceConfig(config));
 
-    // Test connection
+    // Test connection - dispatch always returns the action, check the type
     const result = await dispatch(testConnection({ config, type: 'source' }));
-    if (result.payload.success) {
-      // Connection successful
+    // If fulfilled, check if successful
+    if (testConnection.fulfilled.match(result)) {
+      if (result.payload?.result?.success) {
+        // Connection successful
+        console.log('Connection test successful');
+      }
     }
+    // If rejected, error is handled by Redux state (error will be set)
   };
 
   const onSubmitDest = async data => {
     const config = { type: destination, ...data };
     dispatch(setDestinationConfig(config));
 
-    // Test connection
+    // Test connection - dispatch always returns the action, check the type
     const result = await dispatch(testConnection({ config, type: 'destination' }));
-    if (result.payload.success) {
-      // Connection successful
+    // If fulfilled, check if successful
+    if (testConnection.fulfilled.match(result)) {
+      if (result.payload?.result?.success) {
+        // Connection successful
+        console.log('Connection test successful');
+      }
     }
+    // If rejected, error is handled by Redux state (error will be set)
   };
 
   const handleNext = () => {
