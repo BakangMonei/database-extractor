@@ -44,6 +44,7 @@
     "data-migration"
   ],
   "dependencies": {
+    "@db-migrate/connectors-supabase": "^0.1.0",
     "@reduxjs/toolkit": "^2.11.2"
   }
 }

@@ -109,6 +109,72 @@ export class PostgreSQLConnector extends Connector {
   }
 
   /**
+   * Get primary keys for a table.
+   * @param {string} tableName - Table name
+   * @returns {Promise<Array<string>>} Array of primary key column names
+   */
+  async getPrimaryKeys(tableName) {
+    await this.initialize();
+    const schema = this.config.schema || 'public';
+
+    try {
+      const query = `
+        SELECT a.attname
+        FROM pg_index i
+        JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
+        WHERE i.indrelid = $1::regclass
+        AND i.indisprimary;
+      `;
+
+      const fullTableName = `"${schema}"."${tableName}"`;
+      const result = await this.pool.query(query, [fullTableName]);
+      return result.rows.map(row => row.attname);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  /**
+   * Get foreign key relationships for a table.
+   * @param {string} tableName - Table name
+   * @returns {Promise<Array<object>>} Array of foreign key relationships
+   */
+  async getForeignKeys(tableName) {
+    await this.initialize();
+    const schema = this.config.schema || 'public';
+
+    try {
+      const query = `
+        SELECT
+          tc.constraint_name,
+          kcu.column_name,
+          ccu.table_name AS foreign_table_name,
+          ccu.column_name AS foreign_column_name
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+          AND tc.table_schema = kcu.table_schema
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+          AND ccu.table_schema = tc.table_schema
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+        AND tc.table_name = $1
+        AND tc.table_schema = $2;
+      `;
+
+      const result = await this.pool.query(query, [tableName, schema]);
+      return result.rows.map(row => ({
+        constraintName: row.constraint_name,
+        columnName: row.column_name,
+        foreignTableName: row.foreign_table_name,
+        foreignColumnName: row.foreign_column_name,
+      }));
+    } catch (error) {
+      return [];
+    }
+  }
+
+  /**
    * Get schema information for a table.
    * @param {string} name - Table name
    * @returns {Promise<object>} Schema information
@@ -143,7 +209,17 @@ export class PostgreSQLConnector extends Connector {
         };
       }
 
-      return { columns };
+      // Get primary keys and foreign keys
+      const [primaryKeys, foreignKeys] = await Promise.all([
+        this.getPrimaryKeys(name),
+        this.getForeignKeys(name),
+      ]);
+
+      return {
+        columns,
+        primaryKeys,
+        foreignKeys,
+      };
     } catch (error) {
       throw new Error(`Failed to get schema for table ${name}: ${error.message}`);
     }

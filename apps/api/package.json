@@ -22,6 +22,7 @@
     "@db-migrate/shared": "*",
     "@db-migrate/connectors-firebase": "*",
     "@db-migrate/connectors-postgres": "*",
+    "@db-migrate/connectors-supabase": "*",
     "@db-migrate/connectors-mongo": "*",
     "express": "^4.21.2",
     "cors": "^2.8.5",

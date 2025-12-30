@@ -12,4 +12,5 @@ export {
   FirebaseFirestoreConfigSchema,
   PostgreSQLConfigSchema,
   MongoDBConfigSchema,
+  SupabaseConfigSchema,
 } from './schemas.js';

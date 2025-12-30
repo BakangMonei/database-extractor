@@ -81,20 +81,73 @@ export default function StepDiscover() {
           )}
           <div className="space-y-2">
             {destinationTables.map(table => (
-              <button
+              <div
                 key={table.name}
-                onClick={() => dispatch(setSelectedDestinationTable(table.name))}
-                className={`w-full rounded-lg border-2 px-4 py-3 text-left transition-all ${
+                className={`w-full rounded-lg border-2 transition-all ${
                   selectedDestinationTable === table.name
                     ? 'border-indigo-600 bg-indigo-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <div className="font-medium text-gray-900">{table.name}</div>
-                {table.columnCount !== undefined && (
-                  <div className="text-sm text-gray-500">{table.columnCount} columns</div>
+                <button
+                  onClick={() => dispatch(setSelectedDestinationTable(table.name))}
+                  className="w-full px-4 py-3 text-left"
+                >
+                  <div className="font-medium text-gray-900">{table.name}</div>
+                  {table.columnCount !== undefined && (
+                    <div className="text-sm text-gray-500">{table.columnCount} columns</div>
+                  )}
+                  {table.schema?.primaryKeys && table.schema.primaryKeys.length > 0 && (
+                    <div className="mt-1 text-xs text-indigo-600">
+                      🔑 PK: {table.schema.primaryKeys.join(', ')}
+                    </div>
+                  )}
+                </button>
+                {selectedDestinationTable === table.name && table.schema && (
+                  <div className="border-t border-gray-200 bg-white px-4 py-3">
+                    <div className="text-sm font-semibold text-gray-700 mb-2">Schema Details:</div>
+                    {table.schema.columns && (
+                      <div className="mb-3">
+                        <div className="text-xs font-medium text-gray-600 mb-1">Columns:</div>
+                        <div className="space-y-1 max-h-32 overflow-y-auto">
+                          {Object.entries(table.schema.columns).map(([colName, colInfo]) => (
+                            <div key={colName} className="text-xs text-gray-700 flex items-center gap-2">
+                              <span className="font-mono">{colName}</span>
+                              <span className="text-gray-500">({colInfo.type})</span>
+                              {table.schema.primaryKeys?.includes(colName) && (
+                                <span className="px-1 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs">
+                                  PK
+                                </span>
+                              )}
+                              {!colInfo.nullable && (
+                                <span className="px-1 py-0.5 bg-red-100 text-red-700 rounded text-xs">
+                                  NOT NULL
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {table.schema.foreignKeys && table.schema.foreignKeys.length > 0 && (
+                      <div>
+                        <div className="text-xs font-medium text-gray-600 mb-1">Foreign Keys:</div>
+                        <div className="space-y-1">
+                          {table.schema.foreignKeys.map((fk, idx) => (
+                            <div key={idx} className="text-xs text-gray-700">
+                              <span className="font-mono">{fk.columnName}</span>
+                              <span className="text-gray-500">
+                                {' → '}
+                                {fk.foreignTableName}.{fk.foreignColumnName}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 )}
-              </button>
+              </div>
             ))}
           </div>
         </div>

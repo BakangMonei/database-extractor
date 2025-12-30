@@ -47,12 +47,28 @@ export const MongoDBConfigSchema = z.object({
 });
 
 /**
+ * Connection configuration schema for Supabase.
+ */
+export const SupabaseConfigSchema = z.object({
+  type: z.literal('supabase'),
+  connectionString: z.string().optional(),
+  host: z.string().optional(),
+  port: z.number().int().positive().optional(),
+  database: z.string(),
+  user: z.string(),
+  password: z.string(),
+  ssl: z.boolean().default(true),
+  schema: z.string().default('public'),
+});
+
+/**
  * Union schema for all connection configurations.
  */
 export const ConnectionConfigSchema = z.discriminatedUnion('type', [
   FirebaseFirestoreConfigSchema,
   PostgreSQLConfigSchema,
   MongoDBConfigSchema,
+  SupabaseConfigSchema,
 ]);
 
 /**

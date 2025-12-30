@@ -75,6 +75,10 @@ const initialState = {
     source: false,
     destination: false,
   },
+  connectionStatus: {
+    source: null, // { success: boolean, message: string } | null
+    destination: null,
+  },
   migrationJob: null,
   migrationStatus: null,
   migrationLogs: [],
@@ -138,6 +142,11 @@ const migrationSlice = createSlice({
       .addCase(testConnection.fulfilled, (state, action) => {
         const type = action.payload.type;
         state.connectionTesting[type] = false;
+        // Store connection status
+        state.connectionStatus[type] = {
+          success: action.payload.result?.success || false,
+          message: action.payload.result?.message || 'Connection test completed',
+        };
       })
       .addCase(testConnection.rejected, (state, action) => {
         const type = action.meta.arg.type;
@@ -145,6 +154,11 @@ const migrationSlice = createSlice({
         // Use the payload if available (from rejectWithValue), otherwise use error message
         const errorMessage = action.payload?.result?.message || action.error?.message || 'Connection test failed';
         state.error = errorMessage;
+        // Store connection status
+        state.connectionStatus[type] = {
+          success: false,
+          message: errorMessage,
+        };
       })
       // Discover collections
       .addCase(discoverCollections.pending, state => {

@@ -6,6 +6,7 @@
 import { FirebaseFirestoreConnector } from '@db-migrate/connectors-firebase';
 import { PostgreSQLConnector } from '@db-migrate/connectors-postgres';
 import { MongoDBConnector } from '@db-migrate/connectors-mongo';
+import { SupabaseConnector } from '@db-migrate/connectors-supabase';
 
 /**
  * Create a connector instance based on configuration.
@@ -18,6 +19,8 @@ export function createConnector(config) {
       return new FirebaseFirestoreConnector(config);
     case 'postgresql':
       return new PostgreSQLConnector(config);
+    case 'supabase':
+      return new SupabaseConnector(config);
     case 'mongodb':
       return new MongoDBConnector(config);
     default:

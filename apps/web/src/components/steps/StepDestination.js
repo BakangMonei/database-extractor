@@ -4,8 +4,9 @@ import { setDestination, setStep } from '../../store/slices/migrationSlice';
 
 const databaseTypes = [
   { id: 'firebase-firestore', name: 'Firebase Firestore', icon: '🔥' },
-  { id: 'mongodb', name: 'MongoDB', icon: '🍃' },
+  { id: 'supabase', name: 'Supabase', icon: '⚡' },
   { id: 'postgresql', name: 'PostgreSQL', icon: '🐘' },
+  { id: 'mongodb', name: 'MongoDB', icon: '🍃' },
   { id: 'mysql', name: 'MySQL', icon: '🗄️' },
 ];
 
