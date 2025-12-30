@@ -1,0 +1,58 @@
+{
+  "name": "@db-migrate/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "React frontend for database migration tool",
+  "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.3",
+    "axios": "^1.7.9",
+    "lucide-react": "^0.474.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-hook-form": "^7.64.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.5",
+    "react-scripts": "5.0.1",
+    "redux": "^5.0.1",
+    "@reduxjs/toolkit": "^2.2.0",
+    "web-vitals": "^2.1.4",
+    "zod": "^3.22.4",
+    "@hookform/resolvers": "^3.3.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "react-scripts start",
+    "lint": "eslint src/**/*.{js,jsx}"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.0",
+    "postcss": "^8.5.4",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "tailwindcss": "^3.4.17"
+  },
+  "proxy": "http://localhost:3001"
+}

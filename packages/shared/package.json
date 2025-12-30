@@ -1,0 +1,24 @@
+{
+  "name": "@db-migrate/shared",
+  "version": "0.1.0",
+  "description": "Shared utilities and interfaces for database connectors",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": [
+    "database",
+    "migration",
+    "shared"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

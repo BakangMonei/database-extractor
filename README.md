@@ -1,70 +1,256 @@
-# Getting Started with Create React App
+# DB Migrate
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/yourusername/db-migrate/workflows/CI/badge.svg)](https://github.com/yourusername/db-migrate/actions)
 
-## Available Scripts
+An open-source tool for migrating data between SQL and NoSQL databases. Built with JavaScript, React, Node.js, and a modular connector architecture.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Multi-Database Support**: Migrate between Firebase Firestore, PostgreSQL, MySQL, MongoDB, and more
+- **Flexible Migration Directions**:
+  - NoSQL → SQL (Firestore → PostgreSQL/MySQL)
+  - SQL → NoSQL (PostgreSQL/MySQL → MongoDB/Firestore)
+  - SQL → SQL
+  - NoSQL → NoSQL
+- **Schema Mapping**: Visual field mapping with type conversions
+- **Batch Processing**: Configurable batch sizes for efficient migrations
+- **Progress Tracking**: Real-time migration progress and logs
+- **Dry Run Mode**: Test migrations without writing data
+- **Secure by Default**: All database credentials handled server-side
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Architecture
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This project uses a monorepo structure with npm workspaces:
 
-### `npm test`
+```
+db-migrate/
+├── apps/
+│   ├── web/          # React frontend (TailwindCSS, Redux Toolkit)
+│   └── api/          # Express backend API
+├── packages/
+│   ├── core/         # Migration engine & mapping logic
+│   ├── shared/       # Shared utilities & schemas
+│   └── connectors-*/ # Database connectors (plugin system)
+└── docs/             # Documentation
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Technology Stack
 
-### `npm run build`
+- **Frontend**: React 19, Redux Toolkit, TailwindCSS, React Hook Form
+- **Backend**: Node.js, Express, Pino (logging)
+- **Database Drivers**: Firebase Admin SDK, pg (PostgreSQL), mongodb
+- **Validation**: Zod schemas
+- **Build**: npm workspaces, Create React App
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Quick Start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Node.js >= 18.0.0
+- npm >= 9.0.0
 
-### `npm run eject`
+### Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/db-migrate.git
+cd db-migrate
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Install dependencies
+npm install
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Development
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+# Start both frontend and backend in development mode
+npm run dev
 
-## Learn More
+# Or start them separately:
+npm run dev:web  # Frontend on http://localhost:3000
+npm run dev:api  # Backend on http://localhost:3001
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Environment Setup
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Create `.env` files for configuration (see `.env.example`):
 
-### Code Splitting
+**Backend (`apps/api/.env`)**:
+```env
+PORT=3001
+LOG_LEVEL=info
+NODE_ENV=development
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**Frontend (`apps/web/.env`)**:
+```env
+REACT_APP_API_URL=http://localhost:3001
+```
 
-### Analyzing the Bundle Size
+### Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. **Select Databases**: Choose source and destination database types
+2. **Configure Connections**: Enter connection details (credentials handled securely on backend)
+3. **Discover Data**: Browse collections/tables and select what to migrate
+4. **Map Fields**: Map source fields to destination fields with type conversions
+5. **Configure Settings**: Set batch size, upsert options, dry run mode
+6. **Run Migration**: Monitor progress in real-time
 
-### Making a Progressive Web App
+## MVP: Firestore → PostgreSQL
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The current MVP supports end-to-end migration from Firebase Firestore to PostgreSQL:
 
-### Advanced Configuration
+### Firebase Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+For Firebase Firestore, you need:
 
-### Deployment
+1. **Service Account JSON** (recommended for production):
+   - Download from Firebase Console → Project Settings → Service Accounts
+   - Paste JSON content in the connection form (not stored, used temporarily)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+2. **Or Firebase Client Config** (development only):
+   ```javascript
+   {
+     apiKey: "...",
+     authDomain: "...",
+     projectId: "...",
+     // ... other config
+   }
+   ```
 
-### `npm run build` fails to minify
+### PostgreSQL Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Standard PostgreSQL connection:
+- Host, Port (default: 5432)
+- Database name
+- Username and password
+- SSL option
+
+### Example Migration
+
+1. Select **Firebase Firestore** as source
+2. Select **PostgreSQL** as destination
+3. Configure Firebase (service account JSON or client config)
+4. Configure PostgreSQL connection
+5. Discover collections and tables
+6. Map Firestore collection fields to PostgreSQL table columns
+7. Run migration!
+
+## Project Structure
+
+### Packages
+
+- **@db-migrate/shared**: Connector interface, schemas, types
+- **@db-migrate/core**: Migration engine, job runner, transformation logic
+- **@db-migrate/connectors-firebase**: Firebase Firestore connector
+- **@db-migrate/connectors-postgres**: PostgreSQL connector
+- **@db-migrate/connectors-mongo**: MongoDB connector (stub)
+
+### Apps
+
+- **@db-migrate/web**: React frontend application
+- **@db-migrate/api**: Express API server
+
+## Adding a New Connector
+
+1. Create a new package: `packages/connectors-<name>`
+2. Implement the `Connector` interface from `@db-migrate/shared`
+3. Register in `apps/api/src/connectors/index.js`
+4. Add connection form UI in `apps/web/src/components/steps/StepConnection.js`
+5. Add to database type lists in step components
+6. Write tests
+7. Update documentation
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+## Security
+
+**IMPORTANT**: This tool handles sensitive database credentials. Key security practices:
+
+- ✅ All database connections are made server-side (backend API)
+- ✅ Credentials are never stored in frontend or localStorage
+- ✅ Service account files are handled as temporary uploads (not persisted)
+- ✅ Environment variables for sensitive configuration
+- ✅ HTTPS required in production
+
+See [SECURITY.md](SECURITY.md) for full security guidelines.
+
+## Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run tests for a specific package
+npm test --workspace=@db-migrate/core
+```
+
+## Building
+
+```bash
+# Build all packages and apps
+npm run build
+
+# Build specific workspace
+npm run build --workspace=@db-migrate/web
+```
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
+
+- Code of Conduct
+- Development setup
+- How to add connectors
+- Pull request process
+- Coding standards
+
+## Roadmap
+
+### Phase 1: MVP (Current) ✅
+- [x] Monorepo structure
+- [x] Firebase Firestore → PostgreSQL migration
+- [x] Basic UI wizard
+- [x] Schema mapping
+- [x] Progress tracking
+
+### Phase 2: Enhanced Features
+- [ ] MongoDB connector (full implementation)
+- [ ] MySQL connector
+- [ ] Oracle connector
+- [ ] Advanced field transformations
+- [ ] Data validation
+- [ ] Migration rollback
+- [ ] Scheduled migrations
+
+### Phase 3: Enterprise Features
+- [ ] Redis/BullMQ for job queue
+- [ ] Webhook notifications
+- [ ] Migration history & audit logs
+- [ ] Multi-tenant support
+- [ ] CLI tool
+- [ ] Docker images
+
+### Phase 4: Extended Support
+- [ ] More database types (Redis, DynamoDB, etc.)
+- [ ] Incremental migrations
+- [ ] Data transformation scripts
+- [ ] Schema evolution handling
+- [ ] Performance optimization tools
+
+See [GitHub Issues](https://github.com/yourusername/db-migrate/issues) for detailed feature requests.
+
+## License
+
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
+
+## Support
+
+- 📖 [Documentation](docs/)
+- 🐛 [Issue Tracker](https://github.com/yourusername/db-migrate/issues)
+- 💬 [Discussions](https://github.com/yourusername/db-migrate/discussions)
+
+## Acknowledgments
+
+Built with ❤️ by the open-source community. Special thanks to all contributors!

@@ -1,0 +1,34 @@
+{
+  "name": "@db-migrate/api",
+  "version": "0.1.0",
+  "description": "Express API server for database migrations",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": ["database", "migration", "api"],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@db-migrate/core": "*",
+    "@db-migrate/shared": "*",
+    "@db-migrate/connectors-firebase": "*",
+    "@db-migrate/connectors-postgres": "*",
+    "@db-migrate/connectors-mongo": "*",
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "pino": "^9.0.0",
+    "pino-http": "^10.0.0",
+    "pino-pretty": "^11.0.0",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0"
+  }
+}

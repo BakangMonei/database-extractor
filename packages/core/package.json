@@ -1,0 +1,24 @@
+{
+  "name": "@db-migrate/core",
+  "version": "0.1.0",
+  "description": "Core migration engine and mapping logic",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": [
+    "database",
+    "migration",
+    "etl"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@db-migrate/shared": "*"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

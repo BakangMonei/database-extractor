@@ -1,0 +1,21 @@
+{
+  "name": "@db-migrate/connectors-postgres",
+  "version": "0.1.0",
+  "description": "PostgreSQL connector for database migrations",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": ["database", "migration", "postgresql", "postgres"],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@db-migrate/shared": "*",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

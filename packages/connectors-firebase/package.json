@@ -1,0 +1,26 @@
+{
+  "name": "@db-migrate/connectors-firebase",
+  "version": "0.1.0",
+  "description": "Firebase Firestore connector for database migrations",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": [
+    "database",
+    "migration",
+    "firebase",
+    "firestore"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@db-migrate/shared": "*",
+    "firebase-admin": "^13.4.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
