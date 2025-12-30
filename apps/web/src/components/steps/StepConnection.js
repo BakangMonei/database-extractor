@@ -120,15 +120,19 @@ export default function StepConnection() {
   };
 
   const handleNext = () => {
-    if (!sourceConfig) {
-      toast.error('Please test the source connection first');
+    // Check if connections have been tested successfully
+    const sourceTested = connectionStatus.source?.success === true;
+    const destTested = connectionStatus.destination?.success === true;
+
+    if (!sourceConfig || !sourceTested) {
+      toast.error('Please test the source connection successfully first. Click "Test Connection" on the source form.');
       return;
     }
-    if (!destinationConfig) {
-      toast.error('Please test the destination connection first');
+    if (!destinationConfig || !destTested) {
+      toast.error('Please test the destination connection successfully first. Click "Test Connection" on the destination form.');
       return;
     }
-    // Both configs exist, proceed to discover step
+    // Both configs exist and connections are successful, proceed to discover step
     dispatch(setStep(4));
   };
 
@@ -620,19 +624,31 @@ export default function StepConnection() {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex justify-between items-center">
         <button
           onClick={() => dispatch(setStep(2))}
           className="font-medium text-indigo-600 hover:text-indigo-700"
         >
           ← Back
         </button>
-        <button
-          onClick={handleNext}
-          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
-          Next: Discover Data →
-        </button>
+        <div className="flex items-center gap-4">
+          {(!connectionStatus.source?.success || !connectionStatus.destination?.success) && (
+            <div className="text-sm text-gray-500">
+              {!connectionStatus.source?.success && (
+                <span className="inline-block mr-3">⚠️ Source connection not tested</span>
+              )}
+              {!connectionStatus.destination?.success && (
+                <span className="inline-block">⚠️ Destination connection not tested</span>
+              )}
+            </div>
+          )}
+          <button
+            onClick={handleNext}
+            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Next: Discover Data →
+          </button>
+        </div>
       </div>
     </div>
   );
