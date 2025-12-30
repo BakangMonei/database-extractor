@@ -152,7 +152,8 @@ const migrationSlice = createSlice({
         const type = action.meta.arg.type;
         state.connectionTesting[type] = false;
         // Use the payload if available (from rejectWithValue), otherwise use error message
-        const errorMessage = action.payload?.result?.message || action.error?.message || 'Connection test failed';
+        const errorMessage =
+          action.payload?.result?.message || action.error?.message || 'Connection test failed';
         state.error = errorMessage;
         // Store connection status
         state.connectionStatus[type] = {

@@ -24,10 +24,9 @@ export default function StepConnection() {
     formState: { errors: errorsSource },
   } = useForm({ defaultValues: sourceConfig || {} });
 
-  const {
-    register: registerDest,
-    handleSubmit: handleSubmitDest,
-  } = useForm({ defaultValues: destinationConfig || {} });
+  const { register: registerDest, handleSubmit: handleSubmitDest } = useForm({
+    defaultValues: destinationConfig || {},
+  });
 
   const onSubmitSource = async data => {
     let config = { type: source, ...data };
@@ -238,9 +237,7 @@ export default function StepConnection() {
               className="mt-1 block w-full rounded-md border-gray-300 font-mono text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               placeholder="postgres://user:password@host:port/database"
             />
-            <p className="mt-1 text-sm text-gray-500">
-              Or fill in the individual fields below
-            </p>
+            <p className="mt-1 text-sm text-gray-500">Or fill in the individual fields below</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -349,9 +346,7 @@ export default function StepConnection() {
               className="mt-1 block w-full rounded-md border-gray-300 font-mono text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               placeholder="postgres://user:password@host:port/database"
             />
-            <p className="mt-1 text-sm text-gray-500">
-              Or fill in the individual fields below
-            </p>
+            <p className="mt-1 text-sm text-gray-500">Or fill in the individual fields below</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

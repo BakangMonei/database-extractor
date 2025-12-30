@@ -327,14 +327,14 @@ export class PostgreSQLConnector extends Connector {
             const columns = Object.keys(record);
             const values = Object.values(record);
             const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
-            const columnList = columns.map((col) => `"${col}"`).join(', ');
+            const columnList = columns.map(col => `"${col}"`).join(', ');
 
             if (options.upsert && options.conflictColumns) {
               // UPSERT using ON CONFLICT
-              const conflictCols = options.conflictColumns.map((col) => `"${col}"`).join(', ');
+              const conflictCols = options.conflictColumns.map(col => `"${col}"`).join(', ');
               const updateCols = columns
-                .filter((col) => !options.conflictColumns.includes(col))
-                .map((col) => `"${col}" = EXCLUDED."${col}"`)
+                .filter(col => !options.conflictColumns.includes(col))
+                .map(col => `"${col}" = EXCLUDED."${col}"`)
                 .join(', ');
 
               const upsertQuery = `

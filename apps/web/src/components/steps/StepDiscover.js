@@ -105,22 +105,25 @@ export default function StepDiscover() {
                 </button>
                 {selectedDestinationTable === table.name && table.schema && (
                   <div className="border-t border-gray-200 bg-white px-4 py-3">
-                    <div className="text-sm font-semibold text-gray-700 mb-2">Schema Details:</div>
+                    <div className="mb-2 text-sm font-semibold text-gray-700">Schema Details:</div>
                     {table.schema.columns && (
                       <div className="mb-3">
-                        <div className="text-xs font-medium text-gray-600 mb-1">Columns:</div>
-                        <div className="space-y-1 max-h-32 overflow-y-auto">
+                        <div className="mb-1 text-xs font-medium text-gray-600">Columns:</div>
+                        <div className="max-h-32 space-y-1 overflow-y-auto">
                           {Object.entries(table.schema.columns).map(([colName, colInfo]) => (
-                            <div key={colName} className="text-xs text-gray-700 flex items-center gap-2">
+                            <div
+                              key={colName}
+                              className="flex items-center gap-2 text-xs text-gray-700"
+                            >
                               <span className="font-mono">{colName}</span>
                               <span className="text-gray-500">({colInfo.type})</span>
                               {table.schema.primaryKeys?.includes(colName) && (
-                                <span className="px-1 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs">
+                                <span className="rounded bg-indigo-100 px-1 py-0.5 text-xs text-indigo-700">
                                   PK
                                 </span>
                               )}
                               {!colInfo.nullable && (
-                                <span className="px-1 py-0.5 bg-red-100 text-red-700 rounded text-xs">
+                                <span className="rounded bg-red-100 px-1 py-0.5 text-xs text-red-700">
                                   NOT NULL
                                 </span>
                               )}
@@ -131,7 +134,7 @@ export default function StepDiscover() {
                     )}
                     {table.schema.foreignKeys && table.schema.foreignKeys.length > 0 && (
                       <div>
-                        <div className="text-xs font-medium text-gray-600 mb-1">Foreign Keys:</div>
+                        <div className="mb-1 text-xs font-medium text-gray-600">Foreign Keys:</div>
                         <div className="space-y-1">
                           {table.schema.foreignKeys.map((fk, idx) => (
                             <div key={idx} className="text-xs text-gray-700">
