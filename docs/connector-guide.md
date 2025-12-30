@@ -152,11 +152,7 @@ Add to `apps/web/src/components/steps/StepConnection.js`:
 ```javascript
 const renderSourceForm = () => {
   if (source === 'database-type') {
-    return (
-      <form onSubmit={handleSubmitSource(onSubmitSource)}>
-        {/* Form fields */}
-      </form>
-    );
+    return <form onSubmit={handleSubmitSource(onSubmitSource)}>{/* Form fields */}</form>;
   }
   // ...
 };
@@ -165,6 +161,7 @@ const renderSourceForm = () => {
 ### Database Type Selection
 
 Add to database type arrays in:
+
 - `apps/web/src/components/steps/StepSource.js`
 - `apps/web/src/components/steps/StepDestination.js`
 
@@ -186,7 +183,9 @@ describe('DatabaseConnector', () => {
   let connector;
 
   beforeEach(() => {
-    connector = new DatabaseConnector({ /* test config */ });
+    connector = new DatabaseConnector({
+      /* test config */
+    });
   });
 
   afterEach(async () => {

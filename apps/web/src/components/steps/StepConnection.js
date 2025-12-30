@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { setSourceConfig, setDestinationConfig, setStep, testConnection } from '../../store/slices/migrationSlice';
+import {
+  setSourceConfig,
+  setDestinationConfig,
+  setStep,
+  testConnection,
+} from '../../store/slices/migrationSlice';
 
 export default function StepConnection() {
   const dispatch = useDispatch();
-  const source = useSelector((state) => state.migration.source);
-  const destination = useSelector((state) => state.migration.destination);
-  const sourceConfig = useSelector((state) => state.migration.sourceConfig);
-  const destinationConfig = useSelector((state) => state.migration.destinationConfig);
-  const connectionTesting = useSelector((state) => state.migration.connectionTesting);
+  const source = useSelector(state => state.migration.source);
+  const destination = useSelector(state => state.migration.destination);
+  const sourceConfig = useSelector(state => state.migration.sourceConfig);
+  const destinationConfig = useSelector(state => state.migration.destinationConfig);
+  const connectionTesting = useSelector(state => state.migration.connectionTesting);
 
   const {
     register: registerSource,
@@ -23,9 +28,9 @@ export default function StepConnection() {
     formState: { errors: errorsDest },
   } = useForm({ defaultValues: destinationConfig || {} });
 
-  const onSubmitSource = async (data) => {
+  const onSubmitSource = async data => {
     let config = { type: source, ...data };
-    
+
     // Parse serviceAccount JSON if provided
     if (data.serviceAccount && typeof data.serviceAccount === 'string') {
       try {
@@ -35,9 +40,9 @@ export default function StepConnection() {
         console.error('Invalid serviceAccount JSON', e);
       }
     }
-    
+
     dispatch(setSourceConfig(config));
-    
+
     // Test connection
     const result = await dispatch(testConnection({ config, type: 'source' }));
     if (result.payload.success) {
@@ -45,10 +50,10 @@ export default function StepConnection() {
     }
   };
 
-  const onSubmitDest = async (data) => {
+  const onSubmitDest = async data => {
     const config = { type: destination, ...data };
     dispatch(setDestinationConfig(config));
-    
+
     // Test connection
     const result = await dispatch(testConnection({ config, type: 'destination' }));
     if (result.payload.success) {
@@ -84,7 +89,7 @@ export default function StepConnection() {
             <textarea
               {...registerSource('serviceAccount', {
                 required: false,
-                validate: (value) => {
+                validate: value => {
                   if (!value || value.trim() === '') return true;
                   try {
                     JSON.parse(value);
@@ -95,11 +100,12 @@ export default function StepConnection() {
                 },
               })}
               rows={8}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 font-mono text-sm"
+              className="mt-1 block w-full rounded-md border-gray-300 font-mono text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               placeholder='{"type": "service_account", "project_id": "...", ...}'
             />
             <p className="mt-1 text-sm text-gray-500">
-              Paste your Firebase service account JSON here. For development, you can leave empty and use Firebase client SDK config.
+              Paste your Firebase service account JSON here. For development, you can leave empty
+              and use Firebase client SDK config.
             </p>
             {errorsSource.serviceAccount && (
               <p className="mt-1 text-sm text-red-600">{errorsSource.serviceAccount.message}</p>
@@ -108,7 +114,7 @@ export default function StepConnection() {
           <button
             type="submit"
             disabled={connectionTesting.source}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
           >
             {connectionTesting.source ? 'Testing...' : 'Test Connection'}
           </button>
@@ -178,7 +184,7 @@ export default function StepConnection() {
           <button
             type="submit"
             disabled={connectionTesting.source}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
           >
             {connectionTesting.source ? 'Testing...' : 'Test Connection'}
           </button>
@@ -252,7 +258,7 @@ export default function StepConnection() {
           <button
             type="submit"
             disabled={connectionTesting.destination}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
           >
             {connectionTesting.destination ? 'Testing...' : 'Test Connection'}
           </button>
@@ -265,19 +271,21 @@ export default function StepConnection() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">Configure Connections</h2>
-      <p className="text-gray-600 mb-6">Set up connection details for source and destination databases</p>
+      <h2 className="mb-2 text-2xl font-bold text-gray-900">Configure Connections</h2>
+      <p className="mb-6 text-gray-600">
+        Set up connection details for source and destination databases
+      </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Source Configuration */}
-        <div className="border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Source: {source}</h3>
+        <div className="rounded-lg border p-6">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900">Source: {source}</h3>
           {renderSourceForm()}
         </div>
 
         {/* Destination Configuration */}
-        <div className="border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Destination: {destination}</h3>
+        <div className="rounded-lg border p-6">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900">Destination: {destination}</h3>
           {renderDestinationForm()}
         </div>
       </div>
@@ -285,14 +293,14 @@ export default function StepConnection() {
       <div className="mt-6 flex justify-between">
         <button
           onClick={() => dispatch(setStep(2))}
-          className="text-indigo-600 hover:text-indigo-700 font-medium"
+          className="font-medium text-indigo-600 hover:text-indigo-700"
         >
           ← Back
         </button>
         <button
           onClick={handleNext}
           disabled={!sourceConfig || !destinationConfig}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Next: Discover Data →
         </button>

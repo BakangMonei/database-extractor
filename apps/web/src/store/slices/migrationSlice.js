@@ -12,7 +12,7 @@ export const testConnection = createAsyncThunk(
 
 export const discoverCollections = createAsyncThunk(
   'migration/discoverCollections',
-  async (config) => {
+  async config => {
     const response = await api.discoverCollections(config);
     return response;
   }
@@ -26,29 +26,20 @@ export const inspectSchema = createAsyncThunk(
   }
 );
 
-export const startMigration = createAsyncThunk(
-  'migration/startMigration',
-  async (config) => {
-    const response = await api.startMigration(config);
-    return response;
-  }
-);
+export const startMigration = createAsyncThunk('migration/startMigration', async config => {
+  const response = await api.startMigration(config);
+  return response;
+});
 
-export const getMigrationStatus = createAsyncThunk(
-  'migration/getStatus',
-  async (jobId) => {
-    const response = await api.getMigrationStatus(jobId);
-    return response;
-  }
-);
+export const getMigrationStatus = createAsyncThunk('migration/getStatus', async jobId => {
+  const response = await api.getMigrationStatus(jobId);
+  return response;
+});
 
-export const getMigrationLogs = createAsyncThunk(
-  'migration/getLogs',
-  async (jobId) => {
-    const response = await api.getMigrationLogs(jobId);
-    return response;
-  }
-);
+export const getMigrationLogs = createAsyncThunk('migration/getLogs', async jobId => {
+  const response = await api.getMigrationLogs(jobId);
+  return response;
+});
 
 const initialState = {
   step: 1, // 1: source, 2: destination, 3: connection, 4: discover, 5: mapping, 6: settings, 7: migrate
@@ -120,11 +111,11 @@ const migrationSlice = createSlice({
     setSettings: (state, action) => {
       state.settings = { ...state.settings, ...action.payload };
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       // Test connection
       .addCase(testConnection.pending, (state, action) => {
@@ -142,7 +133,7 @@ const migrationSlice = createSlice({
         state.error = action.error.message;
       })
       // Discover collections
-      .addCase(discoverCollections.pending, (state) => {
+      .addCase(discoverCollections.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -160,7 +151,7 @@ const migrationSlice = createSlice({
         state.error = action.error.message;
       })
       // Start migration
-      .addCase(startMigration.pending, (state) => {
+      .addCase(startMigration.pending, state => {
         state.loading = true;
         state.error = null;
       })

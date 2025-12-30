@@ -11,24 +11,24 @@ const databaseTypes = [
 
 export default function StepDestination() {
   const dispatch = useDispatch();
-  const source = useSelector((state) => state.migration.source);
-  const destination = useSelector((state) => state.migration.destination);
+  const source = useSelector(state => state.migration.source);
+  const destination = useSelector(state => state.migration.destination);
 
   // Filter out source database from options
-  const availableTypes = databaseTypes.filter((db) => db.id !== source);
+  const availableTypes = databaseTypes.filter(db => db.id !== source);
 
-  const handleSelect = (type) => {
+  const handleSelect = type => {
     dispatch(setDestination(type));
     dispatch(setStep(3));
   };
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">Select Destination Database</h2>
-      <p className="text-gray-600 mb-6">Choose the database you want to migrate to</p>
+      <h2 className="mb-2 text-2xl font-bold text-gray-900">Select Destination Database</h2>
+      <p className="mb-6 text-gray-600">Choose the database you want to migrate to</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {availableTypes.map((db) => (
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {availableTypes.map(db => (
           <button
             key={db.id}
             onClick={() => handleSelect(db.id)}
@@ -39,7 +39,7 @@ export default function StepDestination() {
             }`}
           >
             <div className="flex items-center">
-              <span className="text-4xl mr-4">{db.icon}</span>
+              <span className="mr-4 text-4xl">{db.icon}</span>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{db.name}</h3>
               </div>
@@ -51,7 +51,7 @@ export default function StepDestination() {
       <div className="mt-6">
         <button
           onClick={() => dispatch(setStep(1))}
-          className="text-indigo-600 hover:text-indigo-700 font-medium"
+          className="font-medium text-indigo-600 hover:text-indigo-700"
         >
           ← Back to Source Selection
         </button>

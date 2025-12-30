@@ -12,7 +12,7 @@ const api = axios.create({
 /**
  * Test database connection
  */
-export const testConnection = async (config) => {
+export const testConnection = async config => {
   const response = await api.post('/api/connect/test', { config });
   return response.data;
 };
@@ -20,7 +20,7 @@ export const testConnection = async (config) => {
 /**
  * Discover collections/tables
  */
-export const discoverCollections = async (config) => {
+export const discoverCollections = async config => {
   const response = await api.post('/api/discover', { config });
   return response.data;
 };
@@ -36,7 +36,7 @@ export const inspectSchema = async (config, name) => {
 /**
  * Start migration
  */
-export const startMigration = async (migrationConfig) => {
+export const startMigration = async migrationConfig => {
   const response = await api.post('/api/migrate/start', { config: migrationConfig });
   return response.data;
 };
@@ -44,7 +44,7 @@ export const startMigration = async (migrationConfig) => {
 /**
  * Get migration status
  */
-export const getMigrationStatus = async (jobId) => {
+export const getMigrationStatus = async jobId => {
   const response = await api.get(`/api/migrate/status/${jobId}`);
   return response.data;
 };
@@ -52,7 +52,7 @@ export const getMigrationStatus = async (jobId) => {
 /**
  * Get migration logs
  */
-export const getMigrationLogs = async (jobId) => {
+export const getMigrationLogs = async jobId => {
   const response = await api.get(`/api/migrate/logs/${jobId}`);
   return response.data;
 };
@@ -60,7 +60,7 @@ export const getMigrationLogs = async (jobId) => {
 /**
  * Get migration errors
  */
-export const getMigrationErrors = async (jobId) => {
+export const getMigrationErrors = async jobId => {
   const response = await api.get(`/api/migrate/errors/${jobId}`);
   return response.data;
 };

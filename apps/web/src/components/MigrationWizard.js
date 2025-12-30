@@ -21,7 +21,7 @@ const steps = [
 
 export default function MigrationWizard() {
   const dispatch = useDispatch();
-  const currentStep = useSelector((state) => state.migration.step);
+  const currentStep = useSelector(state => state.migration.step);
 
   const renderStep = () => {
     switch (currentStep) {
@@ -45,18 +45,18 @@ export default function MigrationWizard() {
   };
 
   return (
-    <div className="bg-white shadow rounded-lg">
+    <div className="rounded-lg bg-white shadow">
       {/* Step indicator */}
       <div className="border-b border-gray-200 px-6 py-4">
         <nav aria-label="Progress">
           <ol className="flex items-center">
             {steps.map((step, stepIdx) => (
-              <li key={step.id} className={`relative ${stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : ''}`}>
+              <li
+                key={step.id}
+                className={`relative ${stepIdx !== steps.length - 1 ? 'pr-8 sm:pr-20' : ''}`}
+              >
                 {stepIdx !== steps.length - 1 && (
-                  <div
-                    className="absolute inset-0 flex items-center"
-                    aria-hidden="true"
-                  >
+                  <div className="absolute inset-0 flex items-center" aria-hidden="true">
                     <div
                       className={`h-0.5 w-full ${
                         step.id < currentStep ? 'bg-indigo-600' : 'bg-gray-200'
@@ -70,19 +70,23 @@ export default function MigrationWizard() {
                     step.id < currentStep
                       ? 'bg-indigo-600 hover:bg-indigo-700'
                       : step.id === currentStep
-                      ? 'border-2 border-indigo-600 bg-white'
-                      : 'border-2 border-gray-300 bg-white hover:border-gray-400'
+                        ? 'border-2 border-indigo-600 bg-white'
+                        : 'border-2 border-gray-300 bg-white hover:border-gray-400'
                   }`}
                 >
                   <span
                     className={`h-2.5 w-2.5 rounded-full ${
-                      step.id < currentStep ? 'bg-white' : step.id === currentStep ? 'bg-indigo-600' : 'bg-transparent'
+                      step.id < currentStep
+                        ? 'bg-white'
+                        : step.id === currentStep
+                          ? 'bg-indigo-600'
+                          : 'bg-transparent'
                     }`}
                     aria-hidden="true"
                   />
                   <span className="sr-only">{step.name}</span>
                 </button>
-                <div className="absolute left-1/2 -translate-x-1/2 mt-4 hidden sm:block">
+                <div className="absolute left-1/2 mt-4 hidden -translate-x-1/2 sm:block">
                   <p
                     className={`text-xs font-medium ${
                       step.id === currentStep ? 'text-indigo-600' : 'text-gray-500'

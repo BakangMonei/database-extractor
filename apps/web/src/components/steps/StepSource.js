@@ -11,20 +11,20 @@ const databaseTypes = [
 
 export default function StepSource() {
   const dispatch = useDispatch();
-  const source = useSelector((state) => state.migration.source);
+  const source = useSelector(state => state.migration.source);
 
-  const handleSelect = (type) => {
+  const handleSelect = type => {
     dispatch(setSource(type));
     dispatch(setStep(2));
   };
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">Select Source Database</h2>
-      <p className="text-gray-600 mb-6">Choose the database you want to migrate from</p>
+      <h2 className="mb-2 text-2xl font-bold text-gray-900">Select Source Database</h2>
+      <p className="mb-6 text-gray-600">Choose the database you want to migrate from</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {databaseTypes.map((db) => (
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {databaseTypes.map(db => (
           <button
             key={db.id}
             onClick={() => handleSelect(db.id)}
@@ -35,7 +35,7 @@ export default function StepSource() {
             }`}
           >
             <div className="flex items-center">
-              <span className="text-4xl mr-4">{db.icon}</span>
+              <span className="mr-4 text-4xl">{db.icon}</span>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{db.name}</h3>
               </div>

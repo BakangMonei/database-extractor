@@ -33,7 +33,7 @@ migrateRouter.post('/start', async (req, res, next) => {
     });
 
     // Start migration asynchronously
-    runMigration(jobId, config).catch((error) => {
+    runMigration(jobId, config).catch(error => {
       jobRunner.addError(jobId, error);
       jobRunner.updateJob(jobId, { status: 'failed' });
     });

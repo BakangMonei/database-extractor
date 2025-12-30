@@ -77,6 +77,7 @@ npm run dev:api  # Backend on http://localhost:3001
 Create `.env` files for configuration (see `.env.example`):
 
 **Backend (`apps/api/.env`)**:
+
 ```env
 PORT=3001
 LOG_LEVEL=info
@@ -84,6 +85,7 @@ NODE_ENV=development
 ```
 
 **Frontend (`apps/web/.env`)**:
+
 ```env
 REACT_APP_API_URL=http://localhost:3001
 ```
@@ -122,6 +124,7 @@ For Firebase Firestore, you need:
 ### PostgreSQL Setup
 
 Standard PostgreSQL connection:
+
 - Host, Port (default: 5432)
 - Database name
 - Username and password
@@ -209,6 +212,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 ## Roadmap
 
 ### Phase 1: MVP (Current) ✅
+
 - [x] Monorepo structure
 - [x] Firebase Firestore → PostgreSQL migration
 - [x] Basic UI wizard
@@ -216,6 +220,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 - [x] Progress tracking
 
 ### Phase 2: Enhanced Features
+
 - [ ] MongoDB connector (full implementation)
 - [ ] MySQL connector
 - [ ] Oracle connector
@@ -225,6 +230,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 - [ ] Scheduled migrations
 
 ### Phase 3: Enterprise Features
+
 - [ ] Redis/BullMQ for job queue
 - [ ] Webhook notifications
 - [ ] Migration history & audit logs
@@ -233,6 +239,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 - [ ] Docker images
 
 ### Phase 4: Extended Support
+
 - [ ] More database types (Redis, DynamoDB, etc.)
 - [ ] Incremental migrations
 - [ ] Data transformation scripts
